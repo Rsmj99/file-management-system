@@ -1,0 +1,25 @@
+﻿https://github.com/Rsmj99/file-management-system
+
+3 primeros vídeos, y 3:09 minutos del 4to(Vídeo que dura 1:27:00)
+de ahí en adelante yo sigo
+
+quitó el subir archivo de la página principal y cambió el nombre de upload file a upload folder
+->lo cambio porque en el video final de la demo no se permite subir archiuvo desde la página principal
+
+->mejoró que si elimina un archivo que compartió con otro entonces ya no se le muestra a la otra persona(porque antes lo estaba
+mostrando)
+
+->SI elimina un archivo de la página principal, que no aparezca al darle en ver de su carpeta y que no se muestre como opción al
+compartit
+
+-> Admin pueda editar y eliminar sobre cualquier usuario, pero usuario que solo edite y elimine a el mismo
+
+-> localhost/barra-gestion ... ha sido modificado a solo localhost , localhost 80:81 para phpmyadmin
+
+
+--- podría agregar carpeta dentro de otra carpeta.. reemplazar imágenes
+
+usuarios:
+password
+jordan@gmail.com
+roger@gmail.com

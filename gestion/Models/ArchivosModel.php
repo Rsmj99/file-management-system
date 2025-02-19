@@ -6,16 +6,23 @@ class ArchivosModel extends Query
         parent::__construct();
     }
 
-    public function getArchivos($id_usuario)
+    public function getArchivos($estado, $id_usuario)
     {
-        $sql = "SELECT a.* FROM archivos a INNER JOIN carpetas c ON a.id_carpeta = c.id WHERE c.id_usuario = $id_usuario ORDER BY a.id DESC";
+        $sql = "SELECT a.* FROM archivos a INNER JOIN carpetas c ON a.id_carpeta = c.id WHERE c.id_usuario = $id_usuario AND a.estado = $estado ORDER BY a.id DESC";
         return $this->selectAll($sql);
     }
 
-    public function getCarpetas($id_usuario)
+    public function getCarpetas($desde, $porPagina, $id_usuario)
     {
-        $sql = "SELECT * FROM carpetas WHERE id_usuario = $id_usuario AND estado = 1 ORDER BY id DESC";
+        $sql = "SELECT * FROM carpetas WHERE id_usuario = $id_usuario AND estado = 1 AND id !=1 ORDER BY id DESC
+        LIMIT $desde, $porPagina";
         return $this->selectAll($sql);
+    }
+
+    public function getTotalCarpetas($id_usuario)
+    {
+        $sql = "SELECT COUNT(id) AS total FROM carpetas WHERE id_usuario = $id_usuario AND estado = 1 AND id !=1";
+        return $this->select($sql);
     }
 
     public function getUsuarios($valor, $id_usuario)
@@ -61,10 +68,21 @@ class ArchivosModel extends Query
         return $this->select($sql);
     }
 
-    public function eliminar($fecha, $id)
+    public function eliminar($estado, $fecha, $id)
     {
         $sql = "UPDATE archivos SET estado = ?, elimina = ? WHERE id = ?";
-        $array = [0, $fecha, $id];
+        $array = [$estado, $fecha, $id];
         return $this->save($sql, $array);
+    }
+
+    // VER TOTAL ARCHIVOS COMPARTIDOS
+    public function verificarEstado($correo){
+        $sql = "SELECT COUNT(id) AS total FROM detalle_archivos WHERE correo = '$correo' AND estado = 1";
+        return $this->select($sql); 
+    }
+
+    public function getBusqueda($valor, $id_usuario){
+        $sql = "SELECT * FROM archivos WHERE nombre LIKE '%". $valor ."%' AND id_usuario = $id_usuario AND estado = 1 LIMIT 10";
+        return $this->selectAll($sql);
     }
 }

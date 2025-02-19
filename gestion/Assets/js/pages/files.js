@@ -1,16 +1,13 @@
 const btnUpload = document.querySelector('#btnUpload');
 const btnNuevaCarpeta = document.querySelector('#btnNuevaCarpeta');
-const modalFile = document.querySelector("#modalFile");
-const myModal = new bootstrap.Modal(modalFile);
+const myModal = new bootstrap.Modal(document.querySelector("#modalFile"));
 
-const modalCarpeta = document.querySelector("#modalCarpeta");
-const myModal1 = new bootstrap.Modal(modalCarpeta);
+const myModal1 = new bootstrap.Modal(document.querySelector("#modalCarpeta"));
 const frmCarpeta = document.querySelector("#frmCarpeta");
 
 const file = document.querySelector('#file');
 
-const modalCompartir = document.querySelector("#modalCompartir");
-const myModal2 = new bootstrap.Modal(modalCompartir);
+const myModal2 = new bootstrap.Modal(document.querySelector("#modalCompartir"));
 const id_carpeta = document.querySelector("#id_carpeta");
 
 const carpetas = document.querySelectorAll('.carpetas');
@@ -21,8 +18,7 @@ const btnVer = document.querySelector('#btnVer');
 
 // compartir archivos entre usuarios
 const compartir = document.querySelectorAll('.compartir');
-const modalUsuarios = document.querySelector("#modalUsuarios");
-const myModalUser = new bootstrap.Modal(modalUsuarios);
+const myModalUser = new bootstrap.Modal(document.querySelector("#modalUsuarios"));
 const frmCompartir = document.querySelector("#frmCompartir");
 const usuarios = document.querySelector("#usuarios");
 
@@ -33,6 +29,7 @@ const content_acordeon = document.querySelector('#accordionFlushExample');
 
 // ELIMINAR ARCHIVOS RECIENTES
 const eliminar = document.querySelectorAll('.eliminar');
+const modalArchivos = new bootstrap.Modal(document.querySelector("#modalArchivos"));
 
 document.addEventListener('DOMContentLoaded', function () {
     btnUpload.addEventListener('click', function () {
@@ -68,28 +65,36 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     })
 
-    file.addEventListener('change', function (e) {
-        console.log(e.target.files[0]);
-        const data = new FormData();
-        data.append('id_carpeta', id_carpeta.value);
-        data.append('file', e.target.files[0]);
-        const http = new XMLHttpRequest();
-        const url = base_url + 'admin/subirarchivo';
-        http.open("POST", url, true);
-        http.send(data);
-        http.onreadystatechange = function () {
-            if (this.readyState == 4 && this.status == 200) {
-                console.log(this.responseText);
-                const res = JSON.parse(this.responseText);
-                alertaPersonalizada(res.tipo, res.mensaje);
-                if (res.tipo == 'success') {
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 1500);
-                }
-            }
-        };
-    })
+    // file.addEventListener('change', function (e) {
+    //     console.log(e.target.files[0]);
+    //     const data = new FormData();
+    //     data.append('id_carpeta', id_carpeta.value);
+    //     data.append('file', e.target.files[0]);
+    //     const http = new XMLHttpRequest();
+    //     const url = base_url + 'admin/subirarchivo';
+    //     http.open("POST", url, true);
+    //     http.upload.addEventListener('progress', function(e){
+    //         let porcentaje=(e.loaded / e.total)*100;
+    //         container_progress.innerHTML=`<div class="progress">
+    //         <div class="progress-bar"  role="progressbar" style="width: ${porcentaje.toFixed(0)}%;" aria-valuenow="${porcentaje.toFixed(0)}" aria-valuemin="0" aria-valuemax="100">
+    //         ${porcentaje.toFixed(0)}%
+    //         </div>
+    //         </div>`;
+    //     })
+    //     http.addEventListener('load', function () {
+    //         setTimeout(() => {
+    //             window.location.reload();
+    //         }, 1500);
+    //     })
+    //     http.send(data);
+    //     http.onreadystatechange = function () {
+    //         if (this.readyState == 4 && this.status == 200) {
+    //             console.log(this.responseText);
+    //             const res = JSON.parse(this.responseText);
+    //             alertaPersonalizada(res.tipo, res.mensaje);       
+    //         }
+    //     };
+    // })
 
     carpetas.forEach(carpeta => {
         carpeta.addEventListener('click', function (e) {
@@ -100,7 +105,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     btnSubir.addEventListener('click', function () {
         myModal2.hide();
-        file.click();
+        modalArchivos.show();
     })
 
     btnVer.addEventListener('click', function () {
@@ -181,6 +186,39 @@ document.addEventListener('DOMContentLoaded', function () {
         })
     });
 })
+
+//iniciar dropzone
+Dropzone.options.uploadForm = {
+    dictDefaultMessage:'Arrastrar y soltar archivos',
+    dictRemoveFile:'ELIMINAR',
+    autoProcessQueue: false,
+    uploadMultiple: true,
+    parallelUploads: 100,
+    maxFiles: 100, //maximo de archivos a subir
+    addRemoveLinks:true,
+  
+    // The setting up of the dropzone
+    init: function() {
+      var myDropzone = this;
+  
+      // First change the button to actually tell Dropzone to process the queue.
+      document.querySelector('#btnProcesar').addEventListener("click", function(e) {
+        // Make sure that the form isn't actually being sent.
+        e.preventDefault();
+        e.stopPropagation();
+        myDropzone.processQueue();
+      });
+  
+      this.on("successmultiple", function(files, response) {
+        setTimeout(() => {
+            window.location.reload();
+        }, 1500);
+      });
+    }
+   
+  }
+
+//finalizar dropzone
 
 function compartirArchivo(id) {
     const http = new XMLHttpRequest();

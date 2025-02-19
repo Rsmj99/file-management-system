@@ -45,6 +45,19 @@ class UsuariosModel extends Query{
         $datos = array($nombre, $apellido, $correo, $telefono, $direccion, $rol, $id);
         return $this->save($sql, $datos);
     }
+
+    // VER TOTAL ARCHIVOS COMPARTIDOS
+    public function verificarEstado($correo){
+        $sql = "SELECT COUNT(id) AS total FROM detalle_archivos WHERE correo = '$correo' AND estado = 1";
+        return $this->select($sql); 
+    }
+
+    public function cambiarPass($clave, $id)
+    {
+        $sql = "UPDATE usuarios SET clave=? WHERE id=?";
+        $datos = array($clave, $id);
+        return $this->save($sql, $datos);
+    }
 }
 
 ?>

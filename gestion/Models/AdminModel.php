@@ -7,7 +7,7 @@ class AdminModel extends Query{
 
     public function getCarpetas($id_usuario)
     {
-        $sql = "SELECT * FROM carpetas WHERE id_usuario = $id_usuario AND estado = 1 ORDER BY id DESC LIMIT 6";
+        $sql = "SELECT * FROM carpetas WHERE id_usuario = $id_usuario AND estado = 1 AND id != 1 ORDER BY id DESC LIMIT 6";
         return $this->selectAll($sql);
     }
 
@@ -47,16 +47,16 @@ class AdminModel extends Query{
     }
 
     // subir archivos
-    public function subirArchivo($name, $tipo, $id_carpeta)
+    public function subirArchivo($name, $tipo, $id_carpeta, $id_usuario)
     {
-        $sql = "INSERT INTO archivos (nombre, tipo, id_carpeta) VALUES (?,?,?)";
-        $datos = array($name, $tipo, $id_carpeta);
+        $sql = "INSERT INTO archivos (nombre, tipo, id_carpeta, id_usuario) VALUES (?,?,?,?)";
+        $datos = array($name, $tipo, $id_carpeta, $id_usuario);
         return $this->insertar($sql, $datos);
     }
 
     public function getArchivosRecientes($id_usuario)
     {
-        $sql = "SELECT a.* FROM archivos a INNER JOIN carpetas c ON a.id_carpeta = c.id WHERE c.id_usuario = $id_usuario AND a.estado = 1 ORDER BY a.id DESC LIMIT 10";
+        $sql = "SELECT * FROM archivos WHERE id_usuario = $id_usuario AND estado = 1 ORDER BY id DESC LIMIT 10";
         return $this->selectAll($sql);
     }
 
@@ -76,6 +76,25 @@ class AdminModel extends Query{
     {
         $sql = "SELECT * FROM carpetas WHERE id = $id";
         return $this->select($sql);
+    }
+    
+    // VER TOTAL ARCHIVOS COMPARTIDOS
+    public function verificarEstado($correo){
+        $sql = "SELECT COUNT(id) AS total FROM detalle_archivos WHERE correo = '$correo' AND estado = 1";
+        return $this->select($sql); 
+    }
+
+    ## ELIMINAR ARCHIVOS DE FORMA PERMANTENTE
+    public function getConsulta()
+    {
+        $sql = "SELECT * FROM archivos WHERE estado = 0";
+        return $this->selectAll($sql);
+    }
+
+    public function eliminarRegistro($id_archivo){
+        $sql = "DELETE FROM archivos WHERE id = ?";
+        $datos = array($id_archivo);
+        return $this->save($sql, $datos);
     }
 }
 

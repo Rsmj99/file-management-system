@@ -11,7 +11,8 @@
                             <h1>File Manager</h1>
                         </div>
                         <div class="page-description-actions">
-                            <a href="#" class="btn btn-primary" id="btnUpload"><i class="material-icons">add</i>Upload Folder</a>
+                            <a href="#" class="btn btn-primary" id="btnUpload"><i class="material-icons">add</i>Upload
+                                Folder</a>
                         </div>
                     </div>
                 </div>
@@ -23,7 +24,8 @@
                             <div class="card-body d-flex align-items-center">
                                 <i class="material-icons" style="color: #<?php echo $carpeta['color']; ?>;">folder</i>
                                 <div class="file-manager-group-info flex-fill">
-                                    <a href="#" id="<?php echo $carpeta['id']; ?>" class="file-manager-group-title carpetas"><?php echo $carpeta['nombre']; ?>
+                                    <a href="#" id="<?php echo $carpeta['id']; ?>"
+                                        class="file-manager-group-title carpetas"><?php echo $carpeta['nombre']; ?>
                                     </a>
                                     <span class="file-manager-group-about"><?php echo $carpeta['fecha']; ?></span>
                                 </div>
@@ -31,32 +33,21 @@
                         </div>
                     </div>
                 <?php } ?>
-            </div>
-            <div class="section-description">
-                <h1>Todos los archivos</h1>
-            </div>
-            <div class="row">
-                <?php foreach ($data['archivos'] as $archivo) { ?>
-                    <div class="col-md-6">
-                        <div class="card file-manager-recent-item">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center">
-                                    <i class="material-icons-outlined text-danger align-middle m-r-sm">description</i>
-                                    <a href="#" class="file-manager-recent-item-title flex-fill"><?php echo $archivo['nombre']; ?>
-                                    </a>
-                                    <span class="p-h-sm">167kb</span>
-                                    <span class="p-h-sm text-muted">09.14.21</span>
-                                    <a href="#" class="dropdown-toggle file-manager-recent-file-actions" id="file-manager-recent-<?php echo $archivo['id']; ?>" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
-                                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="file-manager-recent-<?php echo $archivo['id']; ?>">
-                                        <li><a class="dropdown-item" href="#">Compartir</a></li>
-                                        <li><a class="dropdown-item" href="#">Download</a></li>
-                                        <li><a class="dropdown-item" href="#">Eliminar</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
+                <div class="text-end">
+                    <?php
+                    $anterior = $data['pagina'] - 1;
+                    $siguiente = $data['pagina'] + 1;
+                    ?>
+                    <div class="btn-group" role="group" aria-label="Button group">
+                        <?php if ($data['pagina'] > 1) { ?>
+                            <a class="btn btn-outline-primary"
+                                href="<?php echo BASE_URL . 'archivos/pagina/' . $anterior; ?>">Anterior</a>
+                        <?php }  if ($data['pagina'] < $data['total']) { ?>
+                            <a class="btn btn-outline-primary"
+                                href="<?php echo BASE_URL . 'archivos/pagina/' . $siguiente; ?>">Siguiente</a>
+                        <?php } ?>
                     </div>
-                <?php } ?>
+                </div>
             </div>
         </div>
     </div>

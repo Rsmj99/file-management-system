@@ -1,3 +1,28 @@
+const inputBusqueda = document.querySelector('#inputBusqueda');
+const container_result = document.querySelector('#container_result');
+
+document.addEventListener('DOMContentLoaded', function(){
+    inputBusqueda.addEventListener('keyup', function(e){
+        if(e.target.value.length>2){
+            buscarArchivos(e.target.value);
+        }
+        
+    });
+    // inputBusqueda.addEventListener('blur', function(e){
+    //     e.target.value='';
+    //     container_result.innerHTML='';
+        
+    // });
+})
+
+function funcionDesenfoque(){
+    setTimeout(() => {
+        container_result.innerHTML='';
+    }, 1000);
+    
+}
+
+
 // Here goes your custom javascript
 function alertaPersonalizada(type, mensaje) {
     Swal.fire({
@@ -40,4 +65,36 @@ function eliminarRegistro(title, text, accion, url, table) {
             };
         }
     });
+}
+
+function buscarArchivos(valor) {
+    const url = base_url + 'archivos/busqueda/'+ valor;
+
+    const http = new XMLHttpRequest();
+    http.open("GET", url, true);
+    http.send();
+    http.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            const res = JSON.parse(this.responseText);
+            let html =`<div class="card"><div class="card-body">`;
+            if(res.length>0){
+                res.forEach(archivo => {
+                    html += `<h5 class="card-title">
+                    <a href=${ base_url + 'Assets/archivos/' + archivo.id_carpeta + '/' + archivo.nombre } " onclick={funcionDesenfoque()}  download="${archivo.nombre } " }">${archivo.nombre}</a></h5><hr>`;
+                });
+                html += `</div>
+                        </div>`;
+            }else{
+                html=`<div class="alert alert-custom alert-indicator-bottom indicator-danger" role="alert">
+            <div class="alert-content text-center">
+                <span class="alert-title">Mensaje !</span>
+                <span class="alert-text">No hay archivos con ese nombre
+                </span>
+            </div>
+        </div>`;
+            }
+            
+            container_result.innerHTML=html;
+        }
+    };
 }

@@ -7,6 +7,19 @@ RUN docker-php-ext-install mysqli pdo pdo_mysql
 RUN a2enmod headers
 RUN a2enmod rewrite
 
+# Instalar dependencias necesarias (curl, git, unzip) para Composer
+RUN apt-get update && apt-get install -y \
+    curl \
+    git \
+    unzip \
+    && rm -rf /var/lib/apt/lists/*
+
+# Descargar e instalar Composer globalmente
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# Verificar la instalación de Composer (opcional, para asegurarte que todo está bien)
+RUN composer --version
+
 RUN /etc/init.d/apache2 restart
 
 # # Copiar los archivos del proyecto al contenedor
